@@ -53,6 +53,7 @@ func (b *Board) Display(enableIndices bool) {
 	}
 }
 
+// ReadInput returns the coordinates read from the standard input and whether the actual input is "pass"
 func ReadInput(turn Turn) (int, int, bool) {
 	var x, y int
 

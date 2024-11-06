@@ -93,7 +93,7 @@ func (b *Board) CountTerritories() (int, int) {
 }
 
 func (b *Board) fillBlankRegion(i, j int, visited *[][]bool, region *[]pair) {
-	if i >= b.size || j >= b.size {
+	if i < 0 || j < 0 || i >= b.size || j >= b.size {
 		return
 	}
 
@@ -104,19 +104,8 @@ func (b *Board) fillBlankRegion(i, j int, visited *[][]bool, region *[]pair) {
 	*region = append(*region, pair{i, j})
 	(*visited)[i][j] = true
 
-	if i > 0 {
-		b.fillBlankRegion(i-1, j, visited, region)
-	}
-
-	if j > 0 {
-		b.fillBlankRegion(i, j-1, visited, region)
-	}
-
-	if i < b.size-1 {
-		b.fillBlankRegion(i+1, j, visited, region)
-	}
-
-	if j < b.size-1 {
-		b.fillBlankRegion(i, j+1, visited, region)
-	}
+	b.fillBlankRegion(i-1, j, visited, region)
+	b.fillBlankRegion(i+1, j, visited, region)
+	b.fillBlankRegion(i, j-1, visited, region)
+	b.fillBlankRegion(i, j+1, visited, region)
 }
