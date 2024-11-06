@@ -30,16 +30,16 @@ func (b *Board) Display(enableIndices bool) {
 		fmt.Println()
 	}
 
-	for y, row := range b.board {
-		for x, cell := range row {
-			if x == 0 && enableIndices {
-				fmt.Printf("%*d", digitCount(b.size), y)
+	for i, row := range b.board {
+		for j, cell := range row {
+			if j == 0 && enableIndices {
+				fmt.Printf("%*d", digitCount(b.size), i)
 			}
 
 			padding := ""
 
 			if !enableIndices {
-				if x != 0 {
+				if j != 0 {
 					padding = strings.Repeat(" ", 1)
 				}
 			} else {
