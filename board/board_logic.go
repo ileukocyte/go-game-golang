@@ -2,19 +2,20 @@ package board
 
 import "errors"
 
-func (b *Board) OccupyCell(i, j int, turn Turn) error {
+func (b *Board) OccupyCell(i, j int, turn Turn) (int, error) {
 	if i >= b.size || j >= b.size {
-		return errors.New("index out of range")
+		return 0, errors.New("index out of range")
 	}
 
 	cell := &b.board[i][j]
 
 	if *cell != '.' {
-		return errors.New("occupied cell")
+		return 0, errors.New("occupied cell")
 	}
 
 	*cell = rune(turn)
 
+	var captured int
 	var probableSuicide = !b.hasLiberties(i, j)
 	opp, _ := GetOppTurn(turn)
 
@@ -27,12 +28,7 @@ func (b *Board) OccupyCell(i, j int, turn Turn) error {
 					probableSuicide = false
 
 					copied[x][y] = '.'
-
-					if turn == Cross {
-						b.xPoints++
-					} else {
-						b.oPoints++
-					}
+					captured++
 				}
 			}
 		}
@@ -41,7 +37,7 @@ func (b *Board) OccupyCell(i, j int, turn Turn) error {
 	if probableSuicide {
 		*cell = '.'
 
-		return errors.New("invalid move that results in an unprofitable suicide")
+		return 0, errors.New("invalid move that results in an unprofitable suicide")
 	}
 
 	stateStr := b.AsStateStr()
@@ -49,13 +45,19 @@ func (b *Board) OccupyCell(i, j int, turn Turn) error {
 	if _, contains := b.stateSet[stateStr]; contains {
 		*cell = '.'
 
-		return errors.New("duplicate state forbidden by the ko rule")
+		return 0, errors.New("duplicate state forbidden by the ko rule")
+	}
+
+	if turn == Cross {
+		b.xPoints += captured
+	} else {
+		b.oPoints += captured
 	}
 
 	b.stateSet[stateStr] = struct{}{}
 	b.board = copied
 
-	return nil
+	return captured, nil
 }
 
 func (b *Board) hasLiberties(i, j int) bool {

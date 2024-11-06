@@ -28,7 +28,7 @@ func main() {
 		x, y, passed := ggboard.ReadInput(turn)
 
 		if !passed {
-			err := board.OccupyCell(x, y, turn)
+			captured, err := board.OccupyCell(x, y, turn)
 
 			if err != nil {
 				fmt.Printf("Invalid turn: %s! Try again!\n", err.Error())
@@ -36,10 +36,14 @@ func main() {
 				continue
 			}
 
+			board.Display(true)
+
+			if captured > 0 {
+				fmt.Printf("%c has captured %d stones!\n", turn, captured)
+			}
+
 			turn, _ = ggboard.GetOppTurn(turn)
 			lastPassed = false
-
-			board.Display(true)
 
 			continue
 		}
