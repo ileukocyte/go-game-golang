@@ -16,7 +16,7 @@ func (b *Board) OccupyCell(i, j int, turn Turn) error {
 	*cell = rune(turn)
 
 	var probableSuicide = !b.hasLiberties(i, j)
-	opp := GetOppTurn(turn)
+	opp, _ := GetOppTurn(turn)
 
 	copied := b.AsSlice()
 
@@ -28,7 +28,7 @@ func (b *Board) OccupyCell(i, j int, turn Turn) error {
 
 					copied[x][y] = '.'
 
-					if turn == CROSS {
+					if turn == Cross {
 						b.xPoints++
 					} else {
 						b.oPoints++

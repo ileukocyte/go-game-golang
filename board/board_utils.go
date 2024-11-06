@@ -5,16 +5,19 @@ import "strings"
 type Turn rune
 
 const (
-	CROSS  Turn = 'X'
-	NOUGHT Turn = 'O'
+	Cross  Turn = 'X'
+	Nought Turn = 'O'
 )
 
-func GetOppTurn(cur Turn) Turn {
-	if cur == NOUGHT {
-		return CROSS
+func GetOppTurn(cur Turn) (Turn, bool) {
+	switch cur {
+	case Cross:
+		return Nought, true
+	case Nought:
+		return Cross, true
+	default:
+		return 0, false
 	}
-
-	return NOUGHT
 }
 
 func (b *Board) AsStateStr() string {

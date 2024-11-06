@@ -79,9 +79,9 @@ func (b *Board) CountTerritories() (int, int) {
 
 				if isConsistent {
 					switch owner {
-					case CROSS:
+					case Cross:
 						xTerritory += len(region)
-					case NOUGHT:
+					case Nought:
 						oTerritory += len(region)
 					}
 				}

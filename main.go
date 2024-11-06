@@ -21,7 +21,7 @@ func main() {
 
 	board.Display(true)
 
-	turn := ggboard.CROSS
+	turn := ggboard.Cross
 	lastPassed := false
 
 	for {
@@ -36,7 +36,7 @@ func main() {
 				continue
 			}
 
-			turn = ggboard.GetOppTurn(turn)
+			turn, _ = ggboard.GetOppTurn(turn)
 			lastPassed = false
 
 			board.Display(true)
@@ -58,7 +58,7 @@ func main() {
 			return
 		}
 
-		turn = ggboard.GetOppTurn(turn)
+		turn, _ = ggboard.GetOppTurn(turn)
 		lastPassed = passed
 
 		board.Display(true)
