@@ -6,7 +6,6 @@ import (
 	ggboard "go-game-golang/board"
 )
 
-// TODO: implement scoreboard
 func main() {
 	sizePtr := flag.Int("size", 9, "Size of a side of the board")
 
@@ -46,7 +45,15 @@ func main() {
 		}
 
 		if lastPassed {
+			xPoints, oPoints := board.XPoints(), board.OPoints()
+			xTerritory, oTerritory := board.CountTerritories()
+
+			xPoints += xTerritory
+			oPoints += oTerritory
+
 			board.Display(true)
+
+			fmt.Printf("Scoreline: %d-%d\n", xPoints, oPoints)
 
 			return
 		}

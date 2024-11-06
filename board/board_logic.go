@@ -28,7 +28,7 @@ func (b *Board) OccupyCell(i, j int, turn Turn) error {
 
 					copied[x][y] = '.'
 
-					if turn == NOUGHT {
+					if turn == CROSS {
 						b.xPoints++
 					} else {
 						b.oPoints++
