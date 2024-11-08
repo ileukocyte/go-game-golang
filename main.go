@@ -3,13 +3,36 @@ package main
 import (
 	"flag"
 	"fmt"
-	ggboard "go-game-golang/board"
+	ggboard "github.com/ileukocyte/go-game-golang/board"
 	"os"
 )
 
+import (
+	"net/http"
+)
+
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	_, err := fmt.Fprintln(w, "Hello, Go Game Web!")
+
+	if err != nil {
+		return
+	}
+}
+
+func mainhttp() {
+	http.HandleFunc("/", homeHandler)
+
+	fmt.Println("Server started at http://localhost:8080")
+
+	err := http.ListenAndServe(":8080", nil)
+
+	if err != nil {
+		return
+	}
+}
+
 func main() {
 	sizePtr := flag.Int("size", 9, "Size of a side of the board")
-	indicesPtr := flag.Bool("indices", true, "Enable board indices")
 
 	flag.Parse()
 
@@ -21,7 +44,7 @@ func main() {
 		return
 	}
 
-	board.Display(*indicesPtr)
+	fmt.Println(board)
 
 	turn := ggboard.Cross
 	lastPassed := false
@@ -38,7 +61,7 @@ func main() {
 				continue
 			}
 
-			board.Display(*indicesPtr)
+			fmt.Println(board)
 
 			if captured > 0 {
 				fmt.Printf("%c has captured %d stones!\n", turn, captured)
@@ -57,7 +80,7 @@ func main() {
 			xPoints += xTerritory
 			oPoints += oTerritory
 
-			board.Display(*indicesPtr)
+			fmt.Println(board)
 
 			fmt.Printf("Scoreline: %d-%d\n", xPoints, oPoints)
 
@@ -67,6 +90,6 @@ func main() {
 		turn, _ = ggboard.GetOppTurn(turn)
 		lastPassed = passed
 
-		board.Display(*indicesPtr)
+		fmt.Println(board)
 	}
 }

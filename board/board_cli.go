@@ -9,7 +9,9 @@ import (
 	"strings"
 )
 
-func (b *Board) Display(enableIndices bool) {
+func (b *Board) String() string {
+	var sb strings.Builder
+
 	digitCount := func(i int) int {
 		if i == 0 {
 			return 1
@@ -18,39 +20,32 @@ func (b *Board) Display(enableIndices bool) {
 		return int(math.Floor(math.Log10(float64(i)))) + 1
 	}
 
-	if enableIndices {
-		padding := strings.Repeat(" ", digitCount(b.size)+1)
+	// column indices padding
+	sb.WriteString(fmt.Sprintf("%*s", digitCount(b.size)+1, ""))
 
-		fmt.Print(padding)
-
-		for i := 0; i < b.size; i++ {
-			fmt.Printf("%*d ", digitCount(b.size), i)
-		}
-
-		fmt.Println()
+	// column indices
+	for i := 0; i < b.size; i++ {
+		sb.WriteString(fmt.Sprintf("%*d ", digitCount(b.size), i))
 	}
 
+	sb.WriteString("\n")
+
+	// rows
 	for i, row := range b.board {
 		for j, cell := range row {
-			if j == 0 && enableIndices {
-				fmt.Printf("%*d", digitCount(b.size), i)
+			if j == 0 {
+				sb.WriteString(fmt.Sprintf("%*d", digitCount(b.size), i))
 			}
 
-			padding := ""
-
-			if !enableIndices {
-				if j != 0 {
-					padding = strings.Repeat(" ", 1)
-				}
-			} else {
-				padding = strings.Repeat(" ", digitCount(b.size))
-			}
-
-			fmt.Printf("%s%c", padding, cell)
+			sb.WriteString(fmt.Sprintf("%*c", digitCount(b.size)+1, cell))
 		}
 
-		fmt.Println()
+		if i < b.size-1 {
+			sb.WriteString("\n")
+		}
 	}
+
+	return sb.String()
 }
 
 // ReadInput returns the coordinates read from the standard input and whether the actual input is "pass"
