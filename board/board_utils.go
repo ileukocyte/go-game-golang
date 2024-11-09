@@ -1,7 +1,5 @@
 package board
 
-import "strings"
-
 type Turn rune
 
 const (
@@ -20,18 +18,6 @@ func GetOppTurn(cur Turn) (Turn, bool) {
 	}
 }
 
-func (b *Board) AsStateStr() string {
-	builder := strings.Builder{}
-
-	for _, row := range b.board {
-		for _, cell := range row {
-			builder.WriteString(string(cell))
-		}
-	}
-
-	return builder.String()
-}
-
 func (b *Board) AsSlice() [][]rune {
 	copied := make([][]rune, b.size)
 
@@ -42,4 +28,27 @@ func (b *Board) AsSlice() [][]rune {
 	}
 
 	return copied
+}
+
+func (b *Board) calculateHash() uint64 {
+	var hash uint64
+
+	for i, row := range b.board {
+		for j, cell := range row {
+			var piece int
+
+			switch cell {
+			case '.':
+				piece = 0
+			case rune(Cross):
+				piece = 1
+			case rune(Nought):
+				piece = 2
+			}
+
+			hash ^= b.zobristTable[i][j][piece]
+		}
+	}
+
+	return hash
 }

@@ -2,14 +2,16 @@ package board
 
 import (
 	"errors"
+	"math/rand"
 )
 
 type Board struct {
-	size     int
-	board    [][]rune
-	xPoints  int
-	oPoints  int
-	stateSet map[string]struct{}
+	size         int
+	board        [][]rune
+	xPoints      int
+	oPoints      int
+	zobristTable [][][]uint64
+	stateMap     map[uint64]bool
 }
 
 func NewBoard(size int) (*Board, error) {
@@ -27,10 +29,25 @@ func NewBoard(size int) (*Board, error) {
 		}
 	}
 
+	zobristTable := make([][][]uint64, size)
+
+	for i := 0; i < size; i++ {
+		zobristTable[i] = make([][]uint64, size)
+
+		for j := 0; j < size; j++ {
+			zobristTable[i][j] = make([]uint64, 3)
+
+			for k := 0; k < 3; k++ {
+				zobristTable[i][j][k] = rand.Uint64()
+			}
+		}
+	}
+
 	return &Board{
-		size:     size,
-		board:    board,
-		stateSet: make(map[string]struct{}),
+		size:         size,
+		board:        board,
+		zobristTable: zobristTable,
+		stateMap:     make(map[uint64]bool),
 	}, nil
 }
 

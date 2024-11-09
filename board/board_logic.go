@@ -7,6 +7,12 @@ func (b *Board) OccupyCell(i, j int, turn Turn) (int, error) {
 		return 0, errors.New("index out of range")
 	}
 
+	opp, valid := GetOppTurn(turn)
+
+	if !valid {
+		return 0, errors.New("invalid turn")
+	}
+
 	cell := &b.board[i][j]
 
 	if *cell != '.' {
@@ -17,7 +23,6 @@ func (b *Board) OccupyCell(i, j int, turn Turn) (int, error) {
 
 	var captured int
 	var probableSuicide = !b.hasLiberties(i, j)
-	opp, _ := GetOppTurn(turn)
 
 	copied := b.AsSlice()
 
@@ -40,9 +45,9 @@ func (b *Board) OccupyCell(i, j int, turn Turn) (int, error) {
 		return 0, errors.New("invalid move that results in an unprofitable suicide")
 	}
 
-	stateStr := b.AsStateStr()
+	hash := b.calculateHash()
 
-	if _, contains := b.stateSet[stateStr]; contains {
+	if b.stateMap[hash] {
 		*cell = '.'
 
 		return 0, errors.New("duplicate state forbidden by the ko rule")
@@ -54,7 +59,7 @@ func (b *Board) OccupyCell(i, j int, turn Turn) (int, error) {
 		b.oPoints += captured
 	}
 
-	b.stateSet[stateStr] = struct{}{}
+	b.stateMap[hash] = true
 	b.board = copied
 
 	return captured, nil
