@@ -7,30 +7,6 @@ import (
 	"os"
 )
 
-import (
-	"net/http"
-)
-
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	_, err := fmt.Fprintln(w, "Hello, Go Game Web!")
-
-	if err != nil {
-		return
-	}
-}
-
-func mainhttp() {
-	http.HandleFunc("/", homeHandler)
-
-	fmt.Println("Server started at http://localhost:8080")
-
-	err := http.ListenAndServe(":8080", nil)
-
-	if err != nil {
-		return
-	}
-}
-
 func main() {
 	sizePtr := flag.Int("size", 9, "Size of a side of the board")
 
