@@ -12,36 +12,28 @@ import (
 func (b *Board) String() string {
 	var sb strings.Builder
 
-	digitCount := func(i int) int {
-		if i == 0 {
-			return 1
-		}
-
-		return int(math.Floor(math.Log10(float64(i)))) + 1
-	}
+	sizeDigitCount := int(math.Floor(math.Log10(float64(b.size)))) + 1
 
 	// column indices padding
-	sb.WriteString(fmt.Sprintf("%*s", digitCount(b.size)+1, ""))
+	sb.WriteString(fmt.Sprintf("%*s", sizeDigitCount+1, ""))
 
 	// column indices
 	for i := 0; i < b.size; i++ {
-		sb.WriteString(fmt.Sprintf("%*d ", digitCount(b.size), i))
+		sb.WriteString(fmt.Sprintf("%*d ", sizeDigitCount, i))
 	}
 
 	sb.WriteString("\n")
 
 	// rows
 	for i, row := range b.board {
-		for j, cell := range row {
-			if j == 0 {
-				sb.WriteString(fmt.Sprintf("%*d", digitCount(b.size), i))
-			}
-
-			sb.WriteString(fmt.Sprintf("%*c", digitCount(b.size)+1, cell))
+		if i > 0 {
+			sb.WriteString("\n")
 		}
 
-		if i < b.size-1 {
-			sb.WriteString("\n")
+		sb.WriteString(fmt.Sprintf("%*d", sizeDigitCount, i))
+
+		for _, cell := range row {
+			sb.WriteString(fmt.Sprintf("%*c", sizeDigitCount+1, cell))
 		}
 	}
 
