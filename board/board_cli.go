@@ -15,37 +15,6 @@ func (b *Board) String() string {
 	maxDigitCount := int(math.Floor(math.Log10(float64(b.size)))) + 1
 
 	// column indices padding
-	sb.WriteString(fmt.Sprintf("%*s", maxDigitCount+1, ""))
-
-	// column indices
-	for i := 0; i < b.size; i++ {
-		sb.WriteString(fmt.Sprintf("%*d ", maxDigitCount, i))
-	}
-
-	sb.WriteString("\n")
-
-	// rows
-	for i, row := range b.board {
-		if i > 0 {
-			sb.WriteString("\n")
-		}
-
-		sb.WriteString(fmt.Sprintf("%*d", maxDigitCount, i))
-
-		for _, cell := range row {
-			sb.WriteString(fmt.Sprintf("%*c", maxDigitCount+1, cell))
-		}
-	}
-
-	return sb.String()
-}
-
-func (b *Board) StringAlt() string {
-	var sb strings.Builder
-
-	maxDigitCount := int(math.Floor(math.Log10(float64(b.size)))) + 1
-
-	// column indices padding
 	_, _ = fmt.Fprintf(&sb, "%*s", maxDigitCount+1, "")
 
 	// column indices
