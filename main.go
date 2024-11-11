@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	ggboard "github.com/ileukocyte/go-game-golang/board"
+	"github.com/ileukocyte/go-game-golang/board"
 	"os"
 )
 
@@ -12,7 +12,7 @@ func main() {
 
 	flag.Parse()
 
-	board, err := ggboard.NewBoard(*sizePtr)
+	b, err := board.NewBoard(*sizePtr)
 
 	if err != nil {
 		_, _ = fmt.Fprintln(os.Stderr, "Error:", err)
@@ -20,16 +20,16 @@ func main() {
 		return
 	}
 
-	fmt.Println(board)
+	fmt.Println(b)
 
-	turn := ggboard.Cross
+	turn := board.Cross
 	lastPassed := false
 
 	for {
-		x, y, passed := ggboard.ReadInput(turn)
+		x, y, passed := board.ReadInput(turn)
 
 		if !passed {
-			captured, err := board.OccupyCell(x, y, turn)
+			captured, err := b.OccupyCell(x, y, turn)
 
 			if err != nil {
 				fmt.Printf("Invalid turn: %s! Try again!\n", err.Error())
@@ -37,35 +37,35 @@ func main() {
 				continue
 			}
 
-			fmt.Println(board)
+			fmt.Println(b)
 
 			if captured > 0 {
 				fmt.Printf("%c has captured %d stones!\n", turn, captured)
 			}
 
-			turn, _ = ggboard.GetOppTurn(turn)
+			turn, _ = board.GetOppTurn(turn)
 			lastPassed = false
 
 			continue
 		}
 
 		if lastPassed {
-			xPoints, oPoints := board.XPoints(), board.OPoints()
-			xTerritory, oTerritory := board.CountTerritories()
+			xPoints, oPoints := b.XPoints(), b.OPoints()
+			xTerritory, oTerritory := b.CountTerritories()
 
 			xPoints += xTerritory
 			oPoints += oTerritory
 
-			fmt.Println(board)
+			fmt.Println(b)
 
 			fmt.Printf("Scoreline: %d-%d\n", xPoints, oPoints)
 
 			return
 		}
 
-		turn, _ = ggboard.GetOppTurn(turn)
+		turn, _ = board.GetOppTurn(turn)
 		lastPassed = passed
 
-		fmt.Println(board)
+		fmt.Println(b)
 	}
 }
