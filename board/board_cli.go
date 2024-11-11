@@ -40,6 +40,37 @@ func (b *Board) String() string {
 	return sb.String()
 }
 
+func (b *Board) StringAlt() string {
+	var sb strings.Builder
+
+	maxDigitCount := int(math.Floor(math.Log10(float64(b.size)))) + 1
+
+	// column indices padding
+	_, _ = fmt.Fprintf(&sb, "%*s", maxDigitCount+1, "")
+
+	// column indices
+	for i := 0; i < b.size; i++ {
+		_, _ = fmt.Fprintf(&sb, "%*d ", maxDigitCount, i)
+	}
+
+	sb.WriteString("\n")
+
+	// rows
+	for i, row := range b.board {
+		if i > 0 {
+			sb.WriteString("\n")
+		}
+
+		_, _ = fmt.Fprintf(&sb, "%*d", maxDigitCount, i)
+
+		for _, cell := range row {
+			_, _ = fmt.Fprintf(&sb, "%*c", maxDigitCount+1, cell)
+		}
+	}
+
+	return sb.String()
+}
+
 // ReadInput returns the coordinates read from the standard input and whether the actual input is "pass"
 func ReadInput(turn Turn) (int, int, bool) {
 	var x, y int
