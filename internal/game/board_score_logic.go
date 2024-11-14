@@ -1,4 +1,4 @@
-package board
+package game
 
 type pair struct {
 	First  int

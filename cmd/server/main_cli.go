@@ -3,16 +3,16 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/ileukocyte/go-game-golang/board"
+	"github.com/ileukocyte/go-game-golang/internal/game"
 	"os"
 )
 
 func main() {
-	sizePtr := flag.Int("size", 9, "Size of a side of the board")
+	sizePtr := flag.Int("size", 9, "Size of a side of the game")
 
 	flag.Parse()
 
-	b, err := board.NewBoard(*sizePtr)
+	b, err := game.NewBoard(*sizePtr)
 
 	if err != nil {
 		_, _ = fmt.Fprintln(os.Stderr, "Error:", err)
@@ -22,11 +22,11 @@ func main() {
 
 	fmt.Println(b)
 
-	turn := board.Cross
+	turn := game.Cross
 	lastPassed := false
 
 	for {
-		x, y, passed := board.ReadInput(turn)
+		x, y, passed := game.ReadInput(turn)
 
 		if !passed {
 			captured, err := b.OccupyCell(x, y, turn)
@@ -43,7 +43,7 @@ func main() {
 				fmt.Printf("%c has captured %d stones!\n", turn, captured)
 			}
 
-			turn, _ = board.GetOppTurn(turn)
+			turn, _ = game.GetOppTurn(turn)
 			lastPassed = false
 
 			continue
@@ -63,7 +63,7 @@ func main() {
 			return
 		}
 
-		turn, _ = board.GetOppTurn(turn)
+		turn, _ = game.GetOppTurn(turn)
 		lastPassed = passed
 
 		fmt.Println(b)

@@ -1,4 +1,4 @@
-package board
+package game
 
 import (
 	"errors"
@@ -16,7 +16,7 @@ type Board struct {
 
 func NewBoard(size int) (*Board, error) {
 	if size < 1 {
-		return nil, errors.New("non-positive board size")
+		return nil, errors.New("non-positive game size")
 	}
 
 	board := make([][]rune, size)
