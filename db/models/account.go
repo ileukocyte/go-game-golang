@@ -2,8 +2,14 @@ package models
 
 import "time"
 
+/*type AuthType int
+
+const (
+	Google AuthType = iota
+)*/
+
 type Account struct {
-	Auth
+	GoogleAuth
 
 	Username     string
 	ID           uint64
@@ -11,9 +17,9 @@ type Account struct {
 	LastLogin    time.Time
 }
 
-type Auth struct {
-	GoogleID      string
+type GoogleAuth struct {
 	AccessToken   string
+	GoogleID      string
 	Email         string
 	EmailVerified bool
 }
