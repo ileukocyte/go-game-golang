@@ -6,7 +6,7 @@ import (
 	"github.com/ileukocyte/go-game-golang/db/models"
 )
 
-func (e *Env) NewGame(playerX, playerO int64, boardSize int) (int64, error) {
+func (env *Env) NewGame(playerX, playerO int64, boardSize int) (int64, error) {
 	var id int64
 
 	sqlStatement := `INSERT INTO games (player_x, player_o, size, board, x_turn, last_passed, started_at)
@@ -22,7 +22,7 @@ func (e *Env) NewGame(playerX, playerO int64, boardSize int) (int64, error) {
 		}
 	}
 
-	err := e.db.QueryRow(
+	err := env.db.QueryRow(
 		sqlStatement,
 		playerX,
 		playerO,
@@ -36,12 +36,12 @@ func (e *Env) NewGame(playerX, playerO int64, boardSize int) (int64, error) {
 	return id, err
 }
 
-func (e *Env) GetGame(id int64) (*models.Game, error) {
+func (env *Env) GetGame(id int64) (*models.Game, error) {
 	sqlStatement := `SELECT * FROM games WHERE id = $1`
 
 	var g models.Game
 
-	err := e.db.QueryRow(sqlStatement, id).Scan(
+	err := env.db.QueryRow(sqlStatement, id).Scan(
 		&g.ID,
 		&g.PlayerX,
 		&g.PlayerO,

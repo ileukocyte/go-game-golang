@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/ileukocyte/go-game-golang/api"
 	"github.com/ileukocyte/go-game-golang/db"
 	"github.com/markbates/goth/gothic"
 )
@@ -34,12 +35,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	_, _ = fmt.Fprintf(w, "Logged in as: %s", user.Name)
 }
 
-func newGameHandler(e *db.Env) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		_, _ = fmt.Fprintf(w, "Initiating a new session...")
-	}
-}
-
 func main() {
 	connStr := fmt.Sprintf(
 		"postgres://%s:%s@localhost:%s/%s",
@@ -64,8 +59,6 @@ func main() {
 
 	router := mux.NewRouter().StrictSlash(true)
 
-	router.HandleFunc("/game/new", newGameHandler(env))
-
 	var (
 		cssFs = http.FileServer(http.Dir("assets/css/"))
 		jsFs  = http.FileServer(http.Dir("assets/js/"))
@@ -74,11 +67,8 @@ func main() {
 	router.PathPrefix("/assets/css/").Handler(http.StripPrefix("/assets/css/", cssFs))
 	router.PathPrefix("/assets/js/").Handler(http.StripPrefix("/assets/js/", jsFs))
 
-	router.HandleFunc("/game/{id:[0-9]+}", func(w http.ResponseWriter, r *http.Request) {
-		//log.Printf("Session ID: %s", mux.Vars(r)["id"])
-
-		http.ServeFile(w, r, "assets/session.html")
-	})
+	router.HandleFunc("/game/new", api.NewGameHandler(env))
+	router.HandleFunc("/game/{id:[0-9]+}", api.GameHandler(env))
 
 	//router.HandleFunc("/auth/{provider}", signInHandler)
 	//router.HandleFunc("/auth/{provider}/callback", callbackHandler)
