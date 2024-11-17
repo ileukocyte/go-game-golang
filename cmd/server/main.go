@@ -7,9 +7,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
-	"github.com/markbates/goth/providers/google"
 )
 
 func signInHandler(w http.ResponseWriter, r *http.Request) {
@@ -36,19 +34,34 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	goth.UseProviders(
+	/*goth.UseProviders(
 		google.New(
 			os.Getenv("OAUTH_CLIENT_ID"),
 			os.Getenv("OAUTH_CLIENT_SECRET"),
 			os.Getenv("OAUTH_CALLBACK_URL"),
 		),
-	)
+	)*/
 
 	router := mux.NewRouter().StrictSlash(true)
 
-	router.HandleFunc("/session/{id}", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "frontend/session.html")
+	router.HandleFunc("/game/new", func(w http.ResponseWriter, r *http.Request) {
+		_, _ = fmt.Fprintf(w, "Initiating a new session...")
 	})
+
+	var (
+		cssFs = http.FileServer(http.Dir("assets/css/"))
+		jsFs  = http.FileServer(http.Dir("assets/js/"))
+	)
+
+	router.PathPrefix("/assets/css/").Handler(http.StripPrefix("/assets/css/", cssFs))
+	router.PathPrefix("/assets/js/").Handler(http.StripPrefix("/assets/js/", jsFs))
+
+	router.HandleFunc("/game/{id:[0-9]+}", func(w http.ResponseWriter, r *http.Request) {
+		//log.Printf("Session ID: %s", mux.Vars(r)["id"])
+
+		http.ServeFile(w, r, "assets/session.html")
+	})
+
 	//router.HandleFunc("/auth/{provider}", signInHandler)
 	//router.HandleFunc("/auth/{provider}/callback", callbackHandler)
 
