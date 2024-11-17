@@ -6,6 +6,9 @@ import (
 	"net/http"
 	"os"
 
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
+
 	"github.com/gorilla/mux"
 	"github.com/ileukocyte/go-game-golang/api"
 	"github.com/ileukocyte/go-game-golang/db"
@@ -49,13 +52,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	/*goth.UseProviders(
-		google.New(
-			os.Getenv("OAUTH_CLIENT_ID"),
-			os.Getenv("OAUTH_CLIENT_SECRET"),
-			os.Getenv("OAUTH_CALLBACK_URL"),
-		),
-	)*/
+	googleConfig := &oauth2.Config{
+		ClientID:     os.Getenv("OAUTH_CLIENT_ID"),
+		ClientSecret: os.Getenv("OAUTH_CLIENT_SECRET"),
+		RedirectURL:  os.Getenv("OAUTH_CALLBACK_URL"),
+		Scopes:       []string{"email", "profile", "openid"},
+		Endpoint:     google.Endpoint,
+	}
 
 	router := mux.NewRouter().StrictSlash(true)
 
@@ -70,8 +73,9 @@ func main() {
 	router.HandleFunc("/game/new", api.NewGameHandler(env))
 	router.HandleFunc("/game/{id:[0-9]+}", api.GameHandler(env))
 
-	//router.HandleFunc("/auth/{provider}", signInHandler)
-	//router.HandleFunc("/auth/{provider}/callback", callbackHandler)
+	router.HandleFunc("/auth", api.AuthHandler)
+	router.HandleFunc("/auth/oauth", api.OAuthHandler(googleConfig))
+	router.HandleFunc("/auth/google/callback", api.GoogleCallbackHandler(env, googleConfig))
 
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("SERVER_PORT"), router))
 }
