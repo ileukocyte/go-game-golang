@@ -1,6 +1,6 @@
 const N = 9; // TODO: fetch from db when a session is created
 
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', () => {
     const boardGridBody = document.querySelector('#board-grid tbody');
     const stoneGridBody = document.querySelector('#stone-grid tbody');
 
