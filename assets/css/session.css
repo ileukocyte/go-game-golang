@@ -1,7 +1,21 @@
+html {
+    height: 100%;
+}
+
 body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background: linear-gradient(120deg, rgba(0, 4, 15, 1) 0%, rgba(0, 15, 56, 1) 100%);
+}
+
+#game-container > h1 {
+    color: var(--light-text);
+    font-family: "Funnel Display", sans-serif;
+    font-weight: 700;
+    font-size: 2.5em;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 #board-wrapper {
@@ -23,7 +37,12 @@ body {
 }
 
 td {
-    border: 1px solid black;
+    border: 4px solid var(--light-text);
+}
+
+#board-grid {
+    background: linear-gradient(300deg, rgba(0, 4, 15, 1) 0%, rgba(0, 15, 56, 1) 100%);
+    box-shadow: 3px 3px 20px 5px rgba(0, 0, 0, 0.24);
 }
 
 #stone-grid td {
@@ -34,17 +53,77 @@ td {
     cursor: pointer;
 }
 
+#stone-grid td:not(.stone):hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    filter: blur(15px);
+    transition: background-color 0.25s ease-in;
+}
+
 .stone {
     box-shadow: 3px 3px 10px 1px rgba(0, 0, 0, 0.2);
     cursor: default !important;
+    animation: stone-appear 0.1s forwards ease-in;
 }
 
 .white-stone {
-    background-color: #fffee1;
-    color: #fffee1;
+    background: linear-gradient(120deg, rgba(255, 238, 203, 1) 0%, rgba(204, 187, 152, 1) 100%);
+}
+
+@keyframes stone-appear {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .black-stone {
-    background-color: black;
-    color: black;
+    background: linear-gradient(120deg, rgba(54, 71, 101, 1) 0%, rgb(39, 56, 85) 100%);
+}
+
+#controls {
+    padding: 10px;
+    margin-top: 25px;
+}
+
+#controls > button {
+    width: 9em;
+    height: 2.35em;
+    border: none;
+    border-radius: 18px;
+    box-shadow: 3px 3px 10px 1px rgba(0, 0, 0, 0.2);
+    font-family: "Funnel Display", sans-serif;
+    font-weight: 600;
+    font-size: 0.9em;
+    margin-right: 10px;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+}
+
+#controls > button:last-child {
+    margin-right: 0;
+}
+
+#controls > button:hover {
+    transform: scale(1.03);
+    filter: brightness(1.1);
+    transition: transform 100ms ease-in, filter 100ms ease-in;
+}
+
+#controls > button:active {
+    transform: scale(0.97);
+    filter: brightness(0.9);
+    transition: transform 50ms ease-in, filter 50ms ease-in;
+}
+
+#controls > #pass-turn {
+    color: var(--light-text);
+    background: linear-gradient(120deg, rgb(156, 138, 78) 0%, rgb(129, 114, 65) 100%);
+}
+
+#controls > #finish-game {
+    color: var(--light-text);
+    background: linear-gradient(120deg, rgb(156, 78, 92) 0%, rgb(140, 67, 80) 100%);
 }
