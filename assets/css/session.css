@@ -1,12 +1,9 @@
-html {
-    height: 100%;
-}
-
 body {
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: linear-gradient(120deg, rgba(0, 4, 15, 1) 0%, rgba(0, 15, 56, 1) 100%);
+    background: linear-gradient(120deg, rgba(0, 4, 15, 1) 0%, rgba(0, 15, 56, 1) 100%) no-repeat;
 }
 
 #game-container > h1 {
@@ -53,16 +50,21 @@ td {
     cursor: pointer;
 }
 
-#stone-grid td:not(.stone):hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    filter: blur(15px);
-    transition: background-color 0.25s ease-in;
+#stone-grid td:not(.stone, .inactive) {
+    background-color: transparent;
+    filter: none;
+    transition: background-color 0.2s ease-in, filter 0.2s ease-in;
+}
+
+#stone-grid td:not(.stone, .inactive):hover {
+    background-color: rgb(93, 158, 255, 0.15);
+    filter: blur(16px);
 }
 
 .stone {
     box-shadow: 3px 3px 10px 1px rgba(0, 0, 0, 0.2);
     cursor: default !important;
-    animation: stone-appear 0.1s forwards ease-in;
+    animation: stone-appear 0.15s forwards ease-in;
 }
 
 .white-stone {
@@ -79,12 +81,11 @@ td {
 }
 
 .black-stone {
-    background: linear-gradient(120deg, rgba(54, 71, 101, 1) 0%, rgb(39, 56, 85) 100%);
+    background: linear-gradient(120deg, rgb(17, 43, 117) 0%, rgb(18, 40, 99) 100%);
 }
 
 #controls {
-    padding: 10px;
-    margin-top: 25px;
+    padding: 35px;
 }
 
 #controls > button {
@@ -100,6 +101,7 @@ td {
     user-select: none;
     -webkit-user-select: none;
     cursor: pointer;
+    transition: transform 50ms ease-in, filter 50ms ease-in;
 }
 
 #controls > button:last-child {
@@ -109,13 +111,11 @@ td {
 #controls > button:hover {
     transform: scale(1.03);
     filter: brightness(1.1);
-    transition: transform 100ms ease-in, filter 100ms ease-in;
 }
 
 #controls > button:active {
     transform: scale(0.97);
     filter: brightness(0.9);
-    transition: transform 50ms ease-in, filter 50ms ease-in;
 }
 
 #controls > #pass-turn {
